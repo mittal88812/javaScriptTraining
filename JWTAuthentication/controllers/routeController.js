@@ -81,7 +81,7 @@ const jwt = require('jsonwebtoken');
 // }
 
 module.exports.register_user = async(req,res) =>{
-    console.log(req);
+    //console.log(req);
     
     const salt = await bcrypt.genSalt(10);
     const hashPass = await bcrypt.hash(req.body.password, salt);
@@ -94,18 +94,20 @@ module.exports.register_user = async(req,res) =>{
     try{
     const result = await newUser.save();
     console.log(result);
+    console.log("Finish executing");
 //    alert('User Registered Successfully.');
     
     res.status(200).redirect('login');
     }catch(err){
         console.log('Some Error Occured :', err);
-        res.status(400).send('Some Error Occured');
+        res.status(400).send(err);
     }
     
 }
 
 module.exports.login_user = async(req,res) => {
 
+    console.log('Login Started');
     const userEmail = await user.findOne({email : req.body.email});
     if(!userEmail) {
         res.status(400).send("User not found");
@@ -145,7 +147,9 @@ module.exports.login_user = async(req,res) => {
 
 module.exports.getDetails = async(req, res) => {
     //console.log(req.query);
+    console.log(req.body);
     const checkUser = await user.findOne({email : req.body.email});
+    console.log(checkUser);
     if(!checkUser){
        res.status(400).send('User is not registered.');
     }
@@ -153,11 +157,15 @@ module.exports.getDetails = async(req, res) => {
     if(checkUser.jwt==null){
         res.status(400).send('Token is required to access private features.')
     }
+    console.log('this happed');
     let userAuth = {};
     try{
+        console.log('satreted')
     userAuth = jwt.verify(req.body.token, "thisissceretkey");
+    console.log(userAuth);
     //console.log(userAuth);
     const userfound = await user.findOne({_id: userAuth._id});
+    console.log(userfound);
     //console.log(userfound);
     if(!userfound || userfound.email != req.body.email){
         console.log('token is not correct.');

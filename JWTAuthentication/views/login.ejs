@@ -4,13 +4,66 @@
         <title>
             Login Page
         </title>
+
+        <script>
+
+            function submitData(event){
+
+                console.log('Submiting the login form');
+
+                var email = event.email.value;
+                var password = event.password.value;
+
+
+               
+
+               let json = JSON.stringify({
+                email: email,
+                password: password
+               });
+
+                const xhr = new XMLHttpRequest();
+                console.log("POsting");
+
+                xhr.open('POST','/login');
+
+                console.log("Headers1");
+                 // set headers
+                xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+                console.log('Sending');
+
+                //xhr.send(data);
+
+                xhr.send(json);
+
+                console.log('Sent6');
+                xhr.onload = () => {
+                   if(xhr.status==200){
+                    const JWT = xhr.getResponseHeader('auth-token');
+                    console.log(JWT);
+                    alert(`Use this JWT token to get the user details. JWT: ${JWT}`);
+                    window.location.href = '/userDetails';
+                   }
+                   else{
+                    alert("Some Error Occurred. Please Check your email and password.");
+                    console.log(xhr.response);
+                   }
+                } 
+
+
+              
+            }
+
+        </script>
+
     </head>
     <body>
         <p>This is page is for Login.</p>
 
-         <form action="/login" method="POST">
+        <form name = 'login' action="javascript:void(0);" id="formData" onsubmit="submitData(this)" method="POST">
                       
-            <h1> Signup form </h1>
+            <h1> Login form </h1>
                          
             <input class="box" type="email" name="email" id="email" 
             placeholder="E-Mail " required /><br>

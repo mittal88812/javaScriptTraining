@@ -4,13 +4,67 @@
         <title>
             Details Page
         </title>
+
+        <script>
+
+            function submitData(event){
+
+                console.log('Submiting the login form');
+
+                var email = event.email.value;
+                var token = event.token.value;
+
+
+               
+
+               let json = JSON.stringify({
+                email: email,
+                token: token
+               });
+
+                const xhr = new XMLHttpRequest();
+                console.log("POsting");
+
+                xhr.open('POST','/userDetails');
+
+                console.log("Headers1");
+                 // set headers
+                xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+                console.log('Sending');
+
+                //xhr.send(data);
+
+                xhr.send(json);
+
+                console.log('Sent7');
+                xhr.onload = () => {
+                   if(xhr.status==200){
+                    const element = document.createElement('p');
+                    element.innerHTML = xhr.response;
+                    document.body.appendChild(element);
+                   }
+                   else{
+                    alert("Some Error Occurred. Please Check your email and password.");
+                    console.log(xhr.response);
+                   }
+                } 
+
+
+              
+            }
+
+        </script>
+
+
+
     </head>
     <body>
         <p>This is page is for Details of User.</p>
 
-         <form action="/userDetails" method="POST">
+        <form name = 'userDetails' action="javascript:void(0);" id="formData" onsubmit="submitData(this)" method="POST">
                       
-            <h1> Signup form </h1>
+            <h1> User <Details></Details> </h1>
                          
             <input class="box" type="email" name="email" id="email" 
             placeholder="E-Mail " required /><br>
